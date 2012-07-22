@@ -88,7 +88,7 @@ function world:load(meter,level)
    self.gameworld:setCallbacks( beginContact, endContact, preSolve, postSolve )
    self.background=love.graphics.newImage("levels/".. level .. "/background.png")
    self.objects={}
-
+   self.TPtriggers={}
 
    --add player
    self.objects[#self.objects+1]={}
