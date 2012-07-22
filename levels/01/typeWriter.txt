@@ -1,1 +1,13 @@
-<start>
+<START>
+<CHAPTER>
+<SECTION>
+hallo dit is de eerste trigger
+<SECTION>
+Alles goed
+<SECTION>
+Loop maar door
+<CHAPTER>
+<SECTION>
+Dit is de tweede
+<SECTION>
+nice

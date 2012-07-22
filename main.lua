@@ -11,16 +11,12 @@ require 'world'
 function love.load()
    widthscreen=1024
    heigthscreen=640
-
+   theworld={}
 
    db=debugger:new()
    db:on()
 
    --load text
-   tw=typeWriter:new()
-   tw:load('text/tutorial.txt')      
-
-
    -- 1= intro
    -- 2= game menu
    -- 3= main game
@@ -35,13 +31,11 @@ function love.draw()
    elseif gamestate==2 then
       menu.draw()
    elseif gamestate==3 then
-      --tw:print()
-      world:draw()
+
+      theworld:draw()
       db:draw()
    elseif gamestate==4 then
-      
-      --tw:print()
-      world:draw()
+      theworld:draw()
       db:draw()
       pause.draw()
    end
@@ -51,8 +45,7 @@ function love.update(dt)
    if gamestate==1 then
       introducer.update(dt)
    elseif gamestate==3 then
-      --tw:update(dt)
-      world:update(dt)
+      theworld:update(dt)
    end
    TEsound.cleanup()
 end

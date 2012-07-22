@@ -9,7 +9,9 @@ world={
    player=stief:new(),
    drawx=0,
    drawy=0,
-   TPtriggers={}
+   TPtriggers={},
+   gameworldstate=1,
+   tw
      }
 
 
@@ -21,25 +23,26 @@ function world:new (o)
 end
 
 function world:update(dt)
-   --update physics
-   self.gameworld:update(dt)
-   --update drawing coordinates
-   self.drawx=-(self.objects[self.playerindex].body:getX()-widthscreen/2)
-   self.drawy=-(self.objects[self.playerindex].body:getY()-heigthscreen/2)
-   if self.drawx>0 then self.drawx=0 end
-   if self.drawy>0 then self.drawy=0 end
-   if self.drawx<-(self.background:getWidth()-widthscreen) then self.drawx=-(self.background:getWidth()-widthscreen) end
-   if self.drawy<-(self.background:getHeight()-heigthscreen) then self.drawy=-(self.background:getHeight()-heigthscreen) end
-   --check for typewriterTriggers
-   print(self.objects[self.playerindex].body:getX())
-   print(self.TPtriggers[1])
-   if self.objects[self.playerindex].body:getX()>=self.TPtriggers[1] then self:triggerTypeWriter() end
-
-   --ask for player input from stief object
-   local commands={}
-   commands=self.player:update(dt)
-   self.objects[self.playerindex].body:applyForce(commands[1], commands[2])
-
+   if self.gameworldstate==1 then
+      --update physics
+      self.gameworld:update(dt)
+      --update drawing coordinates
+      self.drawx=-(self.objects[self.playerindex].body:getX()-widthscreen/2)
+      self.drawy=-(self.objects[self.playerindex].body:getY()-heigthscreen/2)
+      if self.drawx>0 then self.drawx=0 end
+      if self.drawy>0 then self.drawy=0 end
+      if self.drawx<-(self.background:getWidth()-widthscreen) then self.drawx=-(self.background:getWidth()-widthscreen) end
+      if self.drawy<-(self.background:getHeight()-heigthscreen) then self.drawy=-(self.background:getHeight()-heigthscreen) end
+      --check for typewriterTriggers
+      if self.objects[self.playerindex].body:getX()>=self.TPtriggers[1] then self:triggerTypeWriter() end
+      
+      --ask for player input from stief object
+      local commands={}
+      commands=self.player:update(dt)
+      self.objects[self.playerindex].body:applyForce(commands[1], commands[2])
+   elseif self.gameworldstate==2 then
+      self.tw:update(dt)
+   end
 end 
 
 function world:draw()
@@ -51,6 +54,11 @@ function world:draw()
    
    self.player:draw(self.drawx + self.objects[self.playerindex].body:getX(),self.drawy + self.objects[self.playerindex].body:getY()) --function requires location of player
 
+
+   --draw text
+   if self.gameworldstate==2 then
+      self.tw:print()
+   end
    --draw objects outline for debug
    if self.debug then
       --draw collision objects
@@ -91,6 +99,11 @@ function world:load(meter,level)
    self.objects[#self.objects].type="player"
    self.playerindex=#self.objects  --store index
    
+   --load typewriter
+   self.tw=typeWriter:new()
+   self.tw:load("levels/".. level .. "/typeWriter.txt")
+
+
    self.objects[#self.objects].fixture:setRestitution(0.9)
    --automatically add boundries around level
    --left
@@ -225,7 +238,7 @@ end
 
 
 function beginContact(a, b, coll)--push the call back to world object everything will be handeled from there
-   world:beginContact(a,b,coll)
+   theworld:beginContact(a,b,coll)
 
 end
 
@@ -244,9 +257,22 @@ end
 -- trigger function
 function world:triggerTypeWriter(index)
    table.remove(self.TPtriggers,1)
+   self.gameworldstate=2
+end
+
+
+--button functions
+
+function world:space()
+   if self.gameworldstate==2 then
+      self.tw:push()
+   end
 end
 
 
 
 --utility functions
 
+function world:setState(s)
+   self.gameworldstate=s
+end

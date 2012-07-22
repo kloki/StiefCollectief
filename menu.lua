@@ -34,8 +34,8 @@ function menu.space()
    if menu.state==1 then
       gamestate=3
       --load new world
-      world=world:new()
-      world:load(64,"01")
+      theworld=world:new()
+      theworld:load(64,"01")
    end
    if menu.state==2 then love.event.push("quit") end
 

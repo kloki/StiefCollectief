@@ -12,7 +12,7 @@ typeWriter={
    myfont=love.graphics.newFont('fonts/ChronoTrigger.ttf',40),
    width=600,
    x=5,
-   y=5
+   y=600
 }
 
 function typeWriter:new (o)
@@ -46,7 +46,7 @@ function typeWriter:push()
       self:finish()
    elseif self.indexsection  < table.getn(self.texts[self.indexchapter]) then
       self:pushSection()
-   elseif self.indexchapter  < table.getn(self.texts) then
+   elseif self.indexchapter then
       self:pushChapter()
    end
 end
@@ -61,9 +61,12 @@ end
 function typeWriter:pushChapter()
    self.indexstring= 0
    self.indexsection=1
-   self.indexchapter=indexchapter+1
-   self.outputstring=self.texts[self.indexchapter][self.indexsection]:sub(1,self.indexstring)
+   self.indexchapter=self.indexchapter+1
+   if self.indexchapter<=#self.texts then 
+      self.outputstring=self.texts[self.indexchapter][self.indexsection]:sub(1,self.indexstring)
+   end
    TEsound.play('sounds/button-26.wav')
+   theworld:setState(1)
 end
 
 function typeWriter:setChapter(x)
@@ -72,6 +75,7 @@ function typeWriter:setChapter(x)
    self.indexchapter=x
    self.outputstring=self.texts[self.indexchapter][self.indexsection]:sub(1,self.indexstring)
    TEsound.play('sounds/button-26.wav')
+
 end
 
 function typeWriter:finish()
@@ -101,8 +105,9 @@ function typeWriter:load(path)
    --split to the profiles from the text
    local dual=text:split("<START>")
    --get the profiles
-   local profiles=typeWriter.getProfiles(dual[1])
-   
+   if dual[1]~="" then
+      local profiles=typeWriter.getProfiles(dual[1])
+   end
    --build data structures
   
    local chapters=dual[2]:split("<CHAPTER>")
@@ -112,12 +117,14 @@ function typeWriter:load(path)
 	 local temptext={}
 	 local tempcolors={}
 	 for j,section in ipairs(sections) do
-	    local section2 = section:split(">")
-	    temptext[#temptext+1]=section2[2]
-	    if section2[1]=='SECTION' then
-	       tempcolors[#tempcolors+1]=self.standardcolor
-	    else
-	       tempcolors[#tempcolors+1]=profiles[section2[1]]
+	    if section~="" then
+	       local section2 = section:split(">")
+	       temptext[#temptext+1]=section2[2]
+	       if section2[1]=='SECTION' then
+		  tempcolors[#tempcolors+1]=self.standardcolor
+	       else
+		  tempcolors[#tempcolors+1]=profiles[section2[1]]
+	       end
 	    end
 	 end
 	 self.texts[#self.texts+1]=temptext

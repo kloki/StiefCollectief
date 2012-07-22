@@ -11,9 +11,8 @@ function keyHandler.space()
       introducer.stop()
    elseif gamestate==2 then
       menu.space()
-   -- elseif gamestate==3 then
-   --    tw:push()
-   --    world:jump()
+   elseif gamestate==3 then
+      theworld:space()
    elseif gamestate==4 then
       pause.space()
    end
