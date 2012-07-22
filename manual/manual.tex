@@ -1,0 +1,43 @@
+\documentclass[5pt]{article}
+%Gummi|061|=)
+\usepackage{hyperref}
+\title{\textbf{Manual StiefCollectief Game}}
+\author{Koen Klinkers}
+\begin{document}
+
+\maketitle
+\section{General}
+When making new levels you will have to edit .txt files. You need a text editor to write .txt files. Examples: Windows:notepad, OSX:textedit.  
+
+\section{Making game worlds}
+All files needed for level X is put in the folder \textbf{/level/X/}.
+\subsection{background}
+The background is just one big image made using any photoshopo-like image editor. I use GIMP. The file type we are using is .png. The background should be at least 1024x640 because that is the size of the window but it can be bigger. Solid object (Object that never change position or get destroyed ) should be on the background for efficiency. The name for the background should be \textbf{background.png}
+\subsection{solid objects}
+We need to add the boundries for the solid objects manually because the game can not infer them from the background automatically. The solid objects are configured in the file called \textbf{objects.txt}. The config file uses a simple syntax. You need to specify the exact pixel coordinates of the object on the background image. Find these using your Photo shop or GIMP.
+
+\begin{tabular}{|l|l|p{5cm}|}
+	\hline
+	Shape & syntax & description\\
+	\hline
+	Rectangle & R x1 y1 x2 y2 & This creates an rectangle. x1 and y1 are the coordinates of the left top corner. x2 and y2 the coordinates of the right bottom corner\\
+	\hline
+	Circle & C xcenter ycenter R & Circle, requires the coordinates of the center of the circle and the radians of the circle\\
+	\hline
+	Polygon & P x1 y1 x2 .... & A polygon can be any shape up to six sides (triangles for example). Polygons require all the coordinates of all the corner points. A constraint is that the polygon should be concave \href{http://en.wikipedia.org/wiki/Convex_polygon}{wiki} If you make convex polygons the object get bugged\\
+	\hline
+\end{tabular}
+\\
+Here is a small example
+\begin{verbatim}
+R 0 748 2500 800
+R 682 608 848 638
+C 1195 463 50
+P 1282 550 1414 459 1340 748
+\end{verbatim}
+
+
+
+\section{Writing texts}
+For printing text on screen I made a small type writer module. The type write modue 
+\end{document}

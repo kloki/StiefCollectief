@@ -1,0 +1,38 @@
+#Nura 0 255 0
+#Roanne 0 255 255
+<START>
+<SECTION>
+This is  the typewriter module I made. This module takes a .txt file and displays it using a this type writer effect. Press 'space' to continue.
+<SECTION>
+If you feel it takes to long for the text to complete. Press 'space' and the section will finish in an instant. See you didn't have to wait for this sentences to finish.
+<SECTION>
+If you want to write text for this module you need to know how to write the .txt file. This .txt file is a machine readable text file and it should be edited using a text editor. 'Word is not a text editor. For Windows you should use NotePad and for Mac it is called TextEdit I believe. For the .txt file to work it needs to formatted in a certain way. Open the tutorial.txt so you can see the format. The file is inside t;he 'text' folder which is inside the 'Stiefcollectief' folder
+<SECTION> 
+As you can see the example.txt contains this tutorial. Editing the file will change this tutorial. Though the program has to be restarted for the changes to take effect. The different section are indicated using SECTION enclosed by inequality signs. I can't type them here because if do... <SECTION> it would break up this section.
+<SECTION>
+There is also the START operator. This operator separates the profiles from the text. The profiles can be used to format text. To add a profile type a hash tag followed by the profiles name. After the name certain options can be specified. For now it is only possible to adjust the colors for the text but it should be easy to add extra functionality. The colors are in the RGB format. If you have no idea what I am talking about, google: RGB color picker. All profiles have to be declared before the START operator.
+<Nura>
+Why would you want to adjust the colors?
+<SECTION>
+Well because it makes dialogs look nices and easier to follow.
+<Roanne>
+Well that is very smart but how do I use it?
+<SECTION>
+Profiles work the same as sections. Instead of typing SECTION between inequality signs you have to type the profiles name.
+<SECTION>
+There is another operator called CHAPTER. For now it doesn't do much but later on this might be useful. There are a couple of other things to consider. You cannot use the inequality sign in normal text because the program will mistakenly think it is dealing with an operator. The font we are using now is quite limited and has no accents for example. So using exotic signs might cause the program to break. 
+<SECTION> 
+The module handles the formatting by itself. 
+So 
+any 
+formatting 
+you 
+do here 
+has no   
+
+effect on the output. If you are a using empty lines for your own convenience that is OK. But you might have to add some spaces because the program just removes newlines and this might cause words to stick
+together. 
+<SECTION>
+Finally press 'escape' to exit. This can be done any time during the program. If you see typos you can fix them yourselves :) If you want to make your own text by now you can rewrite this file or make a new one and specify the path in main.lua file. Don't be deterred to do try the last option it shouldn't be too difficult. You can also change to font. For this you also need to change the path in the main.lua file.
+<SECTION>
+One step closer to world hegemony.
