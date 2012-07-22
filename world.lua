@@ -8,7 +8,8 @@ world={
    playerindex,
    player=stief:new(),
    drawx=0,
-   drawy=0
+   drawy=0,
+   TPtriggers={}
      }
 
 
@@ -29,8 +30,12 @@ function world:update(dt)
    if self.drawy>0 then self.drawy=0 end
    if self.drawx<-(self.background:getWidth()-widthscreen) then self.drawx=-(self.background:getWidth()-widthscreen) end
    if self.drawy<-(self.background:getHeight()-heigthscreen) then self.drawy=-(self.background:getHeight()-heigthscreen) end
-   
+   --check for typewriterTriggers
+   print(self.objects[self.playerindex].body:getX())
+   print(self.TPtriggers[1])
+   if self.objects[self.playerindex].body:getX()>=self.TPtriggers[1] then self:triggerTypeWriter() end
 
+   --ask for player input from stief object
    local commands={}
    commands=self.player:update(dt)
    self.objects[self.playerindex].body:applyForce(commands[1], commands[2])
@@ -48,6 +53,7 @@ function world:draw()
 
    --draw objects outline for debug
    if self.debug then
+      --draw collision objects
       for index, object in ipairs(self.objects) do
 	 if object.shape:getType()=="circle" then
 	    love.graphics.circle("line", self.drawx + object.body:getX(), self.drawy + object.body:getY(), object.shape:getRadius())
@@ -60,6 +66,10 @@ function world:draw()
 	    love.graphics.polygon("line", points)
 	 end
       end
+      --draw TPtriggers
+      love.graphics.setColor(255,0,0)
+      love.graphics.rectangle("fill",self.TPtriggers[1]+self.drawx,self.drawy,2,self.background:getHeight())
+      love.graphics.setColor(255,255,255)
    end
 end
 
@@ -89,29 +99,31 @@ function world:load(meter,level)
    self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.background:getHeight())
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="wall"
+   self.objects[#self.objects].type="solid"
    --right
    self.objects[#self.objects+1]={}
    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.background:getWidth()+1,self.background:getHeight()/2)
    self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.background:getHeight())
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="wall"
+   self.objects[#self.objects].type="solid"
    --top
    self.objects[#self.objects+1]={}
    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.background:getWidth()/2,-1)
    self.objects[#self.objects].shape = love.physics.newRectangleShape(self.background:getWidth(),2)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="wall"
+   self.objects[#self.objects].type="solid"
    --bottom
    self.objects[#self.objects+1]={}
    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.background:getWidth()/2,self.background:getHeight()+1)
    self.objects[#self.objects].shape = love.physics.newRectangleShape(self.background:getWidth(),2)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="wall"
+   self.objects[#self.objects].type="solid"
 
+
+   --add objects from objects.txt
    local objectfile = love.filesystem.newFile("levels/".. level .. "/objects.txt")
    for object in objectfile:lines() do
       local v=object:split(" ")
@@ -174,8 +186,20 @@ function world:load(meter,level)
    objectfile:close()
 
 
+   --load conf file
+   local conffile = love.filesystem.newFile("levels/".. level .. "/conf.txt")
+   for item in conffile:lines() do
+      local v=item:split(" ")
+      if v[1]=="TPtrigger" then
+	 for index=2,#v do
+	    self.TPtriggers[#self.TPtriggers+1]=tonumber(v[index])
 
-   
+	 end
+	  --put this one at the end so this one never get empty
+	 self.TPtriggers[#self.TPtriggers+1]=self.background:getWidth()+10
+      end
+   end
+   conffile:close()
 end
 
 
@@ -185,11 +209,14 @@ function world:beginContact(a,b,coll)
    local object1=a:getUserData()
    local object2=b:getUserData()
    
-   if object1==self.platerindex then
-      self.player:collision(self.objects[object2].type)
-   elseif object2==self.playerindex then
-      self.player:collision(self.objects[object1].type)
+   if object2==self.playerindex then
+      object1, object2= object2,object1
    end
+   
+  if object1==self.playerindex then
+     if self.objects[object2].type=="solid"  then self.player:collisionSolid(self.objects[object2].type) 
+     end
+  end
   
    if self.debug then
       db:pushCallback(self.objects[object1].type .." collides with ".. self.objects[object2].type) 
@@ -197,7 +224,7 @@ function world:beginContact(a,b,coll)
 end
 
 
-function beginContact(a, b, coll)--push the call back to world object
+function beginContact(a, b, coll)--push the call back to world object everything will be handeled from there
    world:beginContact(a,b,coll)
 
 end
@@ -213,3 +240,13 @@ end
 function postSolve(a, b, coll)
     
 end
+
+-- trigger function
+function world:triggerTypeWriter(index)
+   table.remove(self.TPtriggers,1)
+end
+
+
+
+--utility functions
+

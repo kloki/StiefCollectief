@@ -16,14 +16,10 @@ function love.load()
    db=debugger:new()
    db:on()
 
-   -- world=world:new()
-   -- world:load(64,"01")
-   --stief is initialised in world
-   stief:loadSprites({"sprites/standingleft.png","sprites/standingright.png","sprites/walkingleft.png","sprites/walkingright.png"})
-
    --load text
    tw=typeWriter:new()
    tw:load('text/tutorial.txt')      
+
 
    -- 1= intro
    -- 2= game menu

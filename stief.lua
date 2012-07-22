@@ -40,9 +40,8 @@ function stief:loadSprites(spritepaths)
 end
 
 
-function stief:collision(object)
-   if object=="solid" or object=="wall" then
-      TEsound.play('sounds/bounce.mp3',"stief")
-   end
+function stief:collisionSolid(object)
+   
+   TEsound.play('sounds/bounce.mp3',"stief")
 
 end
