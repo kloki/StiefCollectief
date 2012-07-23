@@ -4,14 +4,16 @@ world={
    debug=false,
    objects={},
    gameworld,
-   background,
+   mapWidth,
+   mapHeigth,
+   backgrounds={},
    playerindex,
    player=stief:new(),
    drawx=0,
    drawy=0,
    TPtriggers={},
    gameworldstate=1,
-   tw
+   tw,
      }
 
 
@@ -31,8 +33,8 @@ function world:update(dt)
       self.drawy=-(self.objects[self.playerindex].body:getY()-heigthscreen/2)
       if self.drawx>0 then self.drawx=0 end
       if self.drawy>0 then self.drawy=0 end
-      if self.drawx<-(self.background:getWidth()-widthscreen) then self.drawx=-(self.background:getWidth()-widthscreen) end
-      if self.drawy<-(self.background:getHeight()-heigthscreen) then self.drawy=-(self.background:getHeight()-heigthscreen) end
+      if self.drawx<-(self.mapWidth-widthscreen) then self.drawx=-(self.mapWidth-widthscreen) end
+      if self.drawy<-(self.mapHeigth-heigthscreen) then self.drawy=-(self.mapHeigth-heigthscreen) end
       --check for typewriterTriggers
       if self.objects[self.playerindex].body:getX()>=self.TPtriggers[1] then self:triggerTypeWriter() end
       
@@ -47,9 +49,12 @@ end
 
 function world:draw()
    --draw background
+   local totalwidth=0
+   for index=1,#self.backgrounds do
+      love.graphics.draw(self.backgrounds[index],self.drawx+totalwidth,self.drawy)
+      totalwidth=totalwidth+self.backgrounds[index]:getWidth()
+   end
    
-   love.graphics.draw(self.background,self.drawx,self.drawy)
-   love.graphics.circle("fill", self.drawx + self.objects[self.playerindex].body:getX(), self.drawy + self.objects[self.playerindex].body:getY(), self.objects[self.playerindex].shape:getRadius())
    --draw player
    
    self.player:draw(self.drawx + self.objects[self.playerindex].body:getX(),self.drawy + self.objects[self.playerindex].body:getY()) --function requires location of player
@@ -76,7 +81,7 @@ function world:draw()
       end
       --draw TPtriggers
       love.graphics.setColor(255,0,0)
-      love.graphics.rectangle("fill",self.TPtriggers[1]+self.drawx,self.drawy,2,self.background:getHeight())
+      love.graphics.rectangle("fill",self.TPtriggers[1]+self.drawx,self.drawy,2,self.mapHeigth)
       love.graphics.setColor(255,255,255)
    end
 end
@@ -86,9 +91,36 @@ function world:load(meter,level)
    love.physics.setMeter(meter)
    self.gameworld=love.physics.newWorld(0,9.81*meter,true)
    self.gameworld:setCallbacks( beginContact, endContact, preSolve, postSolve )
-   self.background=love.graphics.newImage("levels/".. level .. "/background.png")
    self.objects={}
    self.TPtriggers={}
+
+
+   local numberOfLevelTiles=0
+   --load conf file
+   local conffile = love.filesystem.newFile("levels/".. level .. "/conf.txt")
+   for item in conffile:lines() do
+      local v=item:split(" ")
+      if v[1]=="TPtrigger" then
+	 for index=2,#v do
+	    self.TPtriggers[#self.TPtriggers+1]=tonumber(v[index])
+
+	 end
+	  --put this one at the end so this one never get empty
+	 self.TPtriggers[#self.TPtriggers+1]=self.mapWidth+10
+      elseif v[1]=="MAPXY" then
+	 self.mapWidth=v[2]
+	 self.mapHeigth=v[3]
+     elseif v[1]=="MAPTILES" then
+	 numberOfLevelTiles=v[2]
+      end
+   end
+   conffile:close(self.mapWidth)
+   --load game world
+   for index=1,numberOfLevelTiles do
+      self.backgrounds[index]=love.graphics.newImage("levels/".. level .. "/background".. index ..".png")
+   end
+
+
 
    --add player
    self.objects[#self.objects+1]={}
@@ -108,29 +140,29 @@ function world:load(meter,level)
    --automatically add boundries around level
    --left
    self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,-1,self.background:getHeight()/2)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.background:getHeight())
+   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,-1,self.mapHeigth/2)
+   self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.mapHeigth)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
    --right
    self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.background:getWidth()+1,self.background:getHeight()/2)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.background:getHeight())
+   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth+1,self.mapHeigth/2)
+   self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.mapHeigth)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
    --top
    self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.background:getWidth()/2,-1)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(self.background:getWidth(),2)
+   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth/2,-1)
+   self.objects[#self.objects].shape = love.physics.newRectangleShape(self.mapWidth,2)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
    --bottom
    self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.background:getWidth()/2,self.background:getHeight()+1)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(self.background:getWidth(),2)
+   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth/2,self.mapHeigth+1)
+   self.objects[#self.objects].shape = love.physics.newRectangleShape(self.mapWidth,2)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
@@ -198,21 +230,6 @@ function world:load(meter,level)
    end
    objectfile:close()
 
-
-   --load conf file
-   local conffile = love.filesystem.newFile("levels/".. level .. "/conf.txt")
-   for item in conffile:lines() do
-      local v=item:split(" ")
-      if v[1]=="TPtrigger" then
-	 for index=2,#v do
-	    self.TPtriggers[#self.TPtriggers+1]=tonumber(v[index])
-
-	 end
-	  --put this one at the end so this one never get empty
-	 self.TPtriggers[#self.TPtriggers+1]=self.background:getWidth()+10
-      end
-   end
-   conffile:close()
 end
 
 

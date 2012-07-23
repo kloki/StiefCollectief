@@ -1,1 +1,7 @@
+# Lines that start with # are ignored
+# indicated how many maps the world is made of
+MAPTILES 2
+# This sets the dimensions of the game world.
+MAPXY 2048 1024
+# This sets the triggers for the text writer
 TPtrigger 500 1000
