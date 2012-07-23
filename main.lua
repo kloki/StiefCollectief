@@ -9,8 +9,8 @@ require 'pause'
 require 'world'
 
 function love.load()
-   widthscreen=1024
-   heigthscreen=640
+   widthscreen=800
+   heigthscreen=600
    theworld={}
 
    db=debugger:new()

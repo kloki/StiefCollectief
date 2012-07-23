@@ -12,7 +12,7 @@ typeWriter={
    myfont=love.graphics.newFont('fonts/ChronoTrigger.ttf',40),
    width=600,
    x=5,
-   y=600
+   y=5
 }
 
 function typeWriter:new (o)
@@ -98,6 +98,9 @@ function typeWriter:setWidth(w)
 end
 
 function typeWriter:load(path)
+   self.y=heigthscreen-100
+
+   
    local text= love.filesystem.newFile(path):read()
    --some formatting
    text = text:strip("\n")
