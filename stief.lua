@@ -24,15 +24,8 @@ end
 
 function stief:update(dt)
    local commands={0,0}
-   if love.keyboard.isDown("right") then 
-      commands[1]=commands[1]+400
-   elseif love.keyboard.isDown("left") then 
-      commands[1]=commands[1]-400
-   elseif love.keyboard.isDown("up") then 
-      commands[2]=commands[2]-400
-   elseif love.keyboard.isDown("down") then 
-      commands[2]=commands[2]+400
-   end
+   if love.keyboard.isDown("right") then commands[1]=commands[1]+400 end --walk left
+   if love.keyboard.isDown("left") then commands[1]=commands[1]-400 end --walk right
    self.body:applyForce(commands[1], commands[2])
 end
 
