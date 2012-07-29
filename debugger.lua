@@ -28,8 +28,8 @@ function debugger:draw()
       --delta time
       love.graphics.print("dt:" .. love.timer.getDelta(),self.x,self.y+15)
       --mouse location
-      love.graphics.print("mouseX:".. love.mouse.getX()-world.drawx,self.x,self.y+30)
-      love.graphics.print("mouseY:".. love.mouse.getY()-world.drawy,self.x,self.y+45)
+      love.graphics.print("mouseX:".. love.mouse.getX()-theworld.drawx,self.x,self.y+30)
+      love.graphics.print("mouseY:".. love.mouse.getY()-theworld.drawy,self.x,self.y+45)
       --callbacks
       love.graphics.print("CollisionCallbacks",self.x,self.y+60)
       love.graphics.print(" "..self.call1,self.x,self.y+75)

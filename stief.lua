@@ -10,8 +10,17 @@ function stief:new (o)
       setmetatable(o, self)
       self.__index = self
       return o
-    end
+end
 
+function stief:load(gameworld)
+   
+   self.body = love.physics.newBody(gameworld,300,300,"dynamic")
+   self.shape = love.physics.newRectangleShape(32,64)
+   self.fixture = love.physics.newFixture(self.body,self.shape,1)
+   self.fixture:setUserData("player")
+   self.body:setFixedRotation( true )
+   
+end
 
 function stief:update(dt)
    local commands={0,0}
@@ -24,12 +33,18 @@ function stief:update(dt)
    elseif love.keyboard.isDown("down") then 
       commands[2]=commands[2]+400
    end
-   return commands
+   self.body:applyForce(commands[1], commands[2])
 end
 
-function stief:draw(x,y)
-   love.graphics.circle("fill",x,y,20)
-   --self.sprites[self.state]:draw(self.x,self.y)
+function stief:draw(drawx,drawy)
+   local points={self.body:getWorldPoints(self.shape:getPoints())}
+   for index=1, #points,2 do
+      points[index]=points[index]+drawx	    
+      points[index+1]=points[index+1]+drawy
+   end
+   
+   love.graphics.polygon("fill", points)
+   
 end
 
 function stief:loadSprites(spritepaths)
@@ -45,3 +60,4 @@ function stief:collisionSolid(object)
    TEsound.play('sounds/bounce.mp3',"stief")
 
 end
+

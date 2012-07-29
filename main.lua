@@ -9,12 +9,12 @@ require 'pause'
 require 'world'
 
 function love.load()
-   widthscreen=800
-   heigthscreen=600
+   widthscreen=1024
+   heigthscreen=640
    theworld={}
 
    db=debugger:new()
-   db:on()
+   --db:on()
 
    --load text
    -- 1= intro

@@ -29,19 +29,19 @@ function world:update(dt)
       --update physics
       self.gameworld:update(dt)
       --update drawing coordinates
-      self.drawx=-(self.objects[self.playerindex].body:getX()-widthscreen/2)
-      self.drawy=-(self.objects[self.playerindex].body:getY()-heigthscreen/2)
+      self.drawx=-(self.player.body:getX()-widthscreen/2)
+      self.drawy=-(self.player.body:getY()-heigthscreen/2)
+      --limit so not outside game world
       if self.drawx>0 then self.drawx=0 end
       if self.drawy>0 then self.drawy=0 end
       if self.drawx<-(self.mapWidth-widthscreen) then self.drawx=-(self.mapWidth-widthscreen) end
       if self.drawy<-(self.mapHeigth-heigthscreen) then self.drawy=-(self.mapHeigth-heigthscreen) end
       --check for typewriterTriggers
-      if self.objects[self.playerindex].body:getX()>=self.TPtriggers[1] then self:triggerTypeWriter() end
+      if self.player.body:getX()>=self.TPtriggers[1] then self:triggerTypeWriter() end
       
       --ask for player input from stief object
-      local commands={}
-      commands=self.player:update(dt)
-      self.objects[self.playerindex].body:applyForce(commands[1], commands[2])
+      self.player:update(dt)
+
    elseif self.gameworldstate==2 then
       self.tw:update(dt)
    end
@@ -57,7 +57,7 @@ function world:draw()
    
    --draw player
    
-   self.player:draw(self.drawx + self.objects[self.playerindex].body:getX(),self.drawy + self.objects[self.playerindex].body:getY()) --function requires location of player
+   self.player:draw(self.drawx,self.drawy) --function requires location of player
 
 
    --draw text
@@ -123,20 +123,19 @@ function world:load(meter,level)
 
 
    --add player
-   self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,300,300,"dynamic")
-   self.objects[#self.objects].shape = love.physics.newCircleShape(20)
-   self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape,1)
-   self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="player"
-   self.playerindex=#self.objects  --store index
+   self.player:load(self.gameworld)
+   -- self.objects[#self.objects+1]={}
+   -- self.objects[#self.objects].body = love.physics.newBody(self.gameworld,300,300,"dynamic")
+   -- self.objects[#self.objects].shape = love.physics.newRectangleShape(32,64)
+   -- self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape,1)
+   -- self.objects[#self.objects].fixture:setUserData(#self.objects)
+   -- self.objects[#self.objects].type="player"
+   -- self.playerindex=#self.objects  --store index
+   -- self.objects[#self.objects].body:setFixedRotation( true )
    
    --load typewriter
    self.tw=typeWriter:new()
    self.tw:load("levels/".. level .. "/typeWriter.txt")
-
-
-   self.objects[#self.objects].fixture:setRestitution(0.9)
    --automatically add boundries around level
    --left
    self.objects[#self.objects+1]={}
@@ -239,17 +238,21 @@ function world:beginContact(a,b,coll)
    local object1=a:getUserData()
    local object2=b:getUserData()
    
-   if object2==self.playerindex then
+   if object2=="player" then
       object1, object2= object2,object1
    end
    
-  if object1==self.playerindex then
+   if object1=="player" then
      if self.objects[object2].type=="solid"  then self.player:collisionSolid(self.objects[object2].type) 
      end
   end
   
    if self.debug then
-      db:pushCallback(self.objects[object1].type .." collides with ".. self.objects[object2].type) 
+      if object1=="player"then
+	 db:pushCallback("Player collides with ".. self.objects[object2].type) 
+      else
+	 db:pushCallback(self.objects[object1].type .." collides with ".. self.objects[object2].type) 
+      end
    end
 end
 
