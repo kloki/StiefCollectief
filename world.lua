@@ -251,7 +251,7 @@ function world:beginContact(a,b,coll)
       if object1=="player"then
 	 db:pushCallback("Player collides with ".. self.objects[object2].type) 
       else
-	 db:pushCallback(self.objects[object1].type .." collides with ".. self.objects[object2].type) 
+	 db:pushCallback(self.objects[object1].type .." collides with  ".. self.objects[object2].type) 
       end
    end
 end
