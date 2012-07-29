@@ -256,6 +256,21 @@ function world:beginContact(a,b,coll)
    end
 end
 
+function world:endContact(a,b,coll)
+   local object1=a:getUserData()
+   local object2=b:getUserData()
+   
+   if object2=="player" then
+      object1, object2= object2,object1
+   end
+   
+   if object1=="player" then
+     if self.objects[object2].type=="solid"  then self.player:leaveSolid() 
+     end
+  end
+  
+end
+
 
 function beginContact(a, b, coll)--push the call back to world object everything will be handeled from there
    theworld:beginContact(a,b,coll)
@@ -263,7 +278,7 @@ function beginContact(a, b, coll)--push the call back to world object everything
 end
 
 function endContact(a, b, coll)
-    
+     theworld:endContact(a,b,coll) 
 end
 
 function preSolve(a, b, coll)

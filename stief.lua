@@ -2,7 +2,7 @@ require 'animator'
 require 'TEsound'
 stief={ 
    sprites={},
-   state=1
+   state=2
 }
 
 function stief:new (o)
@@ -18,15 +18,26 @@ function stief:load(gameworld)
    self.shape = love.physics.newRectangleShape(32,64)
    self.fixture = love.physics.newFixture(self.body,self.shape,1)
    self.fixture:setUserData("player")
-   self.body:setFixedRotation( true )
-   
+   self.body:setFixedRotation( true )  
+   self.fixture:setRestitution(0.1)
 end
 
 function stief:update(dt)
    local commands={0,0}
-   if love.keyboard.isDown("right") then commands[1]=commands[1]+400 end --walk left
-   if love.keyboard.isDown("left") then commands[1]=commands[1]-400 end --walk right
+   if love.keyboard.isDown("right","left") then
+      if love.keyboard.isDown("right") then commands[1]=commands[1]+400 end --walk left
+      if love.keyboard.isDown("left") then commands[1]=commands[1]-400 end --walk right
+   else
+      commands[1]= - self.body:getLinearVelocity()*2--automatically slow down is player is not walking needs work
+   end
    self.body:applyForce(commands[1], commands[2])
+   if self.state==1 then --the player is standing on the ground
+      if love.keyboard.isDown(" ") then 
+	 self.body:applyLinearImpulse(0,-300)
+	 self.state=2   
+	 TEsound.play('sounds/bounce.mp3',"stief")
+ end
+   end
 end
 
 function stief:draw(drawx,drawy)
@@ -48,9 +59,13 @@ function stief:loadSprites(spritepaths)
 end
 
 
-function stief:collisionSolid(object)
-   
-   TEsound.play('sounds/bounce.mp3',"stief")
+function stief:collisionSolid()
+   self.state=1
+
+end
+
+function stief:leaveSolid()
+   self.state=2
 
 end
 
