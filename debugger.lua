@@ -3,13 +3,8 @@ debugger={
    myfont = love.graphics.newFont(love._vera_ttf, 14),
    y=10,
    x=10,
-   yplus=0
-   callbacks={"-","-","-","-","-","-","-"}
-   call1=" ",
-   call2=" ",
-   call3=" ",
-   call4=" ",
-
+   yplus=0,
+   callbacks={"-","-","-","-","-","-","-","-"}
 }
 
 
@@ -28,21 +23,21 @@ function debugger:draw()
       love.graphics.setFont(self.myfont)
       --FPS
       love.graphics.print("FPS:".. love.timer.getFPS(),self.x,self.y+self.yplus)
-      self.yplus=selyplus+15
+      self.yplus=self.yplus+15
       --delta time
       love.graphics.print("dt:" .. love.timer.getDelta(),self.x,self.y+self.yplus)
-      self.yplus=selyplus+15
+      self.yplus=self.yplus+15
       --mouse location
       love.graphics.print("mouseX:".. love.mouse.getX()-theworld.drawx,self.x,self.y+self.yplus)
-      self.yplus=selyplus+15
+      self.yplus=self.yplus+15
       love.graphics.print("mouseY:".. love.mouse.getY()-theworld.drawy,self.x,self.y+self.yplus)
-      self.yplus=selyplus+15
+      self.yplus=self.yplus+15
       --callbacks
       love.graphics.print("CollisionCallbacks",self.x,self.y+self.yplus)
-      self.yplus=selyplus+15
+      self.yplus=self.yplus+15
       for i,callback in ipairs(self.callbacks) do
 	 love.graphics.print(" ".. callback,self.x,self.y+self.yplus)
-	 self.yplus=selyplus+15
+	 self.yplus=self.yplus+15
       end
       
       love.graphics.setColor(255,255,255)
