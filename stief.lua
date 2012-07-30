@@ -3,7 +3,7 @@ require 'TEsound'
 stief={ 
    sprites={},
    state=2,
-   x=300,
+   x=1000,
    y=300,
    debug=false
 }

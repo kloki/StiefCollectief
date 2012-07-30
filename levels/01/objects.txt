@@ -1,4 +1,14 @@
+# solid object
 R 0 972 2048 1024
 R 682 832 848 862
 C 1195 687 50
 P 1282 774 1414 683 1340 972
+# dynamicobjects
+DB 800 200 box.jpg
+DB 1200 400 box.jpg
+DB 1200 300 box.jpg
+DB 1400 600 box.jpg
+DB 1300 400 box.jpg
+DB 1340 500 box.jpg
+DB 1500 600 box.jpg
+DB 1800 200 box.jpg

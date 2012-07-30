@@ -10,8 +10,8 @@ typeWriter={
    typespeed=0.1,
    standardcolor={255,255,255},
    myfont=love.graphics.newFont('fonts/ChronoTrigger.ttf',40),
-   width=600,
-   x=5,
+   width=790,
+   x=8,
    y=5
 }
 
@@ -23,6 +23,8 @@ function typeWriter:new (o)
     end
 
 function typeWriter:print()
+   love.graphics.setColor(0,0,0,150)
+   love.graphics.rectangle("fill",self.x-3,self.y,self.width,95)
    love.graphics.setColor(self.colors[self.indexchapter][self.indexsection])
    love.graphics.setFont(self.myfont)
    love.graphics.printf(self.outputstring,self.x,self.y,self.width, 'left')
@@ -99,7 +101,7 @@ end
 
 function typeWriter:load(path)
    self.y=heigthscreen-100
-
+   self.width=widthscreen-10
    
    local text= love.filesystem.newFile(path):read()
    --some formatting

@@ -1,13 +1,16 @@
 <START>
 <CHAPTER>
 <SECTION>
-hallo dit is de eerste trigger
+Dit is weer een nieuwe versie
 <SECTION>
-Alles goed
+Ik heb het besturen van het karakter geimplementuurd en daarnaast heb ik een vrij geavenceerde physics engine gebruikt
 <SECTION>
-Loop maar door
-<CHAPTER>
+De controls zijn: pijltjes toetsen om te lopen, Space om the springen  en met d zet je de debug mode aan.
 <SECTION>
-Dit is de tweede
+Debug modes geeft allerlij extra informatie voor wat er achter de schermen gebeurt. 
 <SECTION>
-nice
+Jullie moeten wel feedback geven. Het kost niet veel tijd en ik heb er heel veel aan. Daarnaast moeten jullie ook een beetje weten wat hoe het spel er nu uitziet als je er concepten voor wilt verzinnen.
+<SECTION>
+Wel echt doen he!!
+<SECTION>
+Groetjes Koen

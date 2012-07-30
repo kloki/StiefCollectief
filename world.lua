@@ -1,8 +1,10 @@
 require 'stief'
+require 'box'
 require 'utils'
 world={
    debug=false,
    objects={},
+   dynaObjects={},
    gameworld,
    mapWidth,
    mapHeigth,
@@ -55,6 +57,11 @@ function world:draw()
       totalwidth=totalwidth+self.backgrounds[index]:getWidth()
    end
    
+   --draw objects
+   for i,object in ipairs(self.objects) do
+      if object.type~="solid" then object:draw(self.drawx,self.drawy) end--solids are already in the backgroundv 
+   end
+
    --draw player
    
    self.player:draw(self.drawx,self.drawy) --function requires location of player
@@ -217,6 +224,9 @@ function world:load(meter,level)
 	 self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
 	 self.objects[#self.objects].fixture:setUserData(#self.objects)
  	 self.objects[#self.objects].type="solid"
+      elseif v[1]=="DB" then --dynamic object using the box object
+	 self.objects[#self.objects+1]=box:new()
+	 self.objects[#self.objects]:load(#self.objects, self.gameworld,v[2],v[3],v[4])
       end
       
    end
@@ -236,8 +246,8 @@ function world:beginContact(a,b,coll)
    end
    
    if object1=="playerfoot" then
-     if self.objects[object2].type=="solid"  then self.player:collisionSolid(self.objects[object2].type) 
-     end
+     self.player:collisionSolid(self.objects[object2].type) 
+     
   end
   
    if self.debug then
@@ -258,7 +268,7 @@ function world:endContact(a,b,coll)
    end
    
    if object1=="playerfoot" then
-     if self.objects[object2].type=="solid"  then self.player:leaveSolid()   end
+     self.player:leaveSolid()
   end
   
 end
