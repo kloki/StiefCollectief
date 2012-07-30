@@ -2,7 +2,10 @@ require 'animator'
 require 'TEsound'
 stief={ 
    sprites={},
-   state=2
+   state=2,
+   x=300,
+   y=300,
+   debug=false
 }
 
 function stief:new (o)
@@ -14,12 +17,19 @@ end
 
 function stief:load(gameworld)
    
-   self.body = love.physics.newBody(gameworld,300,300,"dynamic")
+   self.body = love.physics.newBody(gameworld,self.x,self.y,"dynamic")
    self.shape = love.physics.newRectangleShape(32,64)
    self.fixture = love.physics.newFixture(self.body,self.shape,1)
    self.fixture:setUserData("player")
    self.body:setFixedRotation( true )  
    self.fixture:setRestitution(0.1)
+   
+
+   --foot sensor
+   self.footShape = love.physics.newRectangleShape( 0, 32, 28,2, 0 )
+   self.footFixture = love.physics.newFixture(self.body,self.footShape,1)
+   self.footFixture:setUserData("playerfoot")
+   
 end
 
 function stief:update(dt)
@@ -48,6 +58,17 @@ function stief:draw(drawx,drawy)
    end
    
    love.graphics.polygon("fill", points)
+   if self.debug then
+      --footsensor
+      points={self.body:getWorldPoints(self.footShape:getPoints())}
+      for index=1, #points,2 do
+	 points[index]=points[index]+drawx	    
+	 points[index+1]=points[index+1]+drawy
+      end
+      love.graphics.setColor(255,0,0)
+      love.graphics.polygon("line",points)
+      love.graphics.setColor(255,255,255)
+   end
    
 end
 

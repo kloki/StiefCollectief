@@ -6,8 +6,8 @@ debugger={
    call1=" ",
    call2=" ",
    call3=" ",
-   call4=" "
-   
+   call4=" ",
+
 }
 
 
@@ -45,9 +45,11 @@ function debugger:switch()
    if self.debug then
       self.debug=false
       world.debug=false
+      world.player.debug=false
    else
       self.debug=true
       world.debug=true
+      world.player.debug=true
      
    end
 end
@@ -56,6 +58,7 @@ end
 function debugger:on()
    self.debug=true
    world.debug=true
+   world.player.debug=true
 end
 
 function debugger:pushCallback(callback)

@@ -124,14 +124,7 @@ function world:load(meter,level)
 
    --add player
    self.player:load(self.gameworld)
-   -- self.objects[#self.objects+1]={}
-   -- self.objects[#self.objects].body = love.physics.newBody(self.gameworld,300,300,"dynamic")
-   -- self.objects[#self.objects].shape = love.physics.newRectangleShape(32,64)
-   -- self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape,1)
-   -- self.objects[#self.objects].fixture:setUserData(#self.objects)
-   -- self.objects[#self.objects].type="player"
-   -- self.playerindex=#self.objects  --store index
-   -- self.objects[#self.objects].body:setFixedRotation( true )
+
    
    --load typewriter
    self.tw=typeWriter:new()
@@ -238,18 +231,18 @@ function world:beginContact(a,b,coll)
    local object1=a:getUserData()
    local object2=b:getUserData()
    
-   if object2=="player" then
+   if object2=="player" or object2=="playerfoot" then
       object1, object2= object2,object1
    end
    
-   if object1=="player" then
+   if object1=="playerfoot" then
      if self.objects[object2].type=="solid"  then self.player:collisionSolid(self.objects[object2].type) 
      end
   end
   
    if self.debug then
-      if object1=="player"then
-	 db:pushCallback("Player collides with ".. self.objects[object2].type) 
+      if object1=="player"or object1=="playerfoot"then
+	 db:pushCallback(object1 .. " collides with ".. self.objects[object2].type) 
       else
 	 db:pushCallback(self.objects[object1].type .." collides with  ".. self.objects[object2].type) 
       end
@@ -260,13 +253,12 @@ function world:endContact(a,b,coll)
    local object1=a:getUserData()
    local object2=b:getUserData()
    
-   if object2=="player" then
+   if object2=="player" or object1=="playerfoot" then
       object1, object2= object2,object1
    end
    
-   if object1=="player" then
-     if self.objects[object2].type=="solid"  then self.player:leaveSolid() 
-     end
+   if object1=="playerfoot" then
+     if self.objects[object2].type=="solid"  then self.player:leaveSolid()   end
   end
   
 end
