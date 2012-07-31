@@ -14,7 +14,9 @@ function love.load()
    theworld={}
 
    db=debugger:new()
-   --db:on()
+   db:on()
+
+
 
    --load text
    -- 1= intro
@@ -66,7 +68,8 @@ function love.keypressed(key)
       keyHandler.x()
    elseif key=="c" then
       keyHandler.c()
-
+    elseif key=="v" then
+       keyHandler.v()
    -- elseif key=="left" then
    --    keyHandler.left()
    -- elseif key=="right" then

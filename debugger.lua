@@ -32,6 +32,9 @@ function debugger:draw()
       self.yplus=self.yplus+15
       love.graphics.print("mouseY:".. love.mouse.getY()-theworld.drawy,self.x,self.y+self.yplus)
       self.yplus=self.yplus+15
+      --objects
+      love.graphics.print("Nobjects:".. #theworld.objects,self.x,self.y+self.yplus)
+      self.yplus=self.yplus+15      
       --callbacks
       love.graphics.print("CollisionCallbacks",self.x,self.y+self.yplus)
       self.yplus=self.yplus+15

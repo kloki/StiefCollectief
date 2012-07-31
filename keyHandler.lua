@@ -17,6 +17,13 @@ function keyHandler.c()
    end
 end
 
+function keyHandler.v()
+   if gamestate==3 then
+      theworld:v()
+   end
+end
+
+
 function keyHandler.space()
    if gamestate==1 then
       introducer.stop()

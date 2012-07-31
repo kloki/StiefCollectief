@@ -61,7 +61,8 @@ function stief:update(dt)
    else
       self.directionV=0
    end
-
+   
+   if love.keyboard.isDown("z") then self:spawnWater() end
 
 
    if self.state==1 then --the player is standing on the ground
@@ -130,5 +131,21 @@ function stief:shoot()
       theworld:addProjectile(self.body:getX()+self.directionH*40,self.body:getY(),self.directionH,self.directionV)     
    else
       theworld:addProjectile(self.body:getX()+self.walking*self.directionH*40,self.body:getY()+self.directionV*60,self.walking*self.directionH,self.directionV)
+   end
+end
+
+function stief:spawnBall()
+   if self.directionV==0 then
+      theworld:addBall(self.body:getX()+self.directionH*40,self.body:getY(),self.directionH,self.directionV)     
+   else
+      theworld:addBall(self.body:getX()+self.walking*self.directionH*40,self.body:getY()+self.directionV*60,self.walking*self.directionH,self.directionV)
+   end
+end
+
+function stief:spawnWater()
+   if self.directionV==0 then
+      theworld:addWater(self.body:getX()+self.directionH*40,self.body:getY(),self.directionH,self.directionV)     
+   else
+      theworld:addWater(self.body:getX()+self.walking*self.directionH*40,self.body:getY()+self.directionV*60,self.walking*self.directionH,self.directionV)
    end
 end

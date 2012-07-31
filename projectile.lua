@@ -2,7 +2,11 @@ projectile={
    Haxis=0,
    Vaxis=0,
    speed=600,
+   power=1,
+   destroy=false,
+   destructable=false,
    type="projectile",
+  
 }
 
 
@@ -21,9 +25,6 @@ function projectile:load(index,gameworld,x,y,H,V)
    self.fixture = love.physics.newFixture(self.body,self.shape,1)
    self.fixture:setUserData(index)
    self.body:setBullet(true)
-   self.type="projectile"
-   self.destroy=false
-
 end
 
 
@@ -34,3 +35,4 @@ end
 function projectile:update(dt)
    self.body:applyForce(self.Haxis*self.speed,self.Vaxis*self.speed)
 end
+
