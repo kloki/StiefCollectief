@@ -122,3 +122,13 @@ function stief:spawnbox()
       theworld:addBox(self.body:getX()+self.walking*self.directionH*40,self.body:getY()+self.directionV*60,"box.jpg")
    end
 end
+
+
+function stief:shoot()
+   TEsound.play('sounds/gun.mp3',"stief")
+   if self.directionV==0 then
+      theworld:addProjectile(self.body:getX()+self.directionH*40,self.body:getY(),self.directionH,self.directionV)     
+   else
+      theworld:addProjectile(self.body:getX()+self.walking*self.directionH*40,self.body:getY()+self.directionV*60,self.walking*self.directionH,self.directionV)
+   end
+end

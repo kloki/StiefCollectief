@@ -6,7 +6,15 @@ function keyHandler.d()
 end
 
 function keyHandler.x()
-   theworld:x()
+   if gamestate==3 then
+      theworld:x()
+   end
+end
+
+function keyHandler.c()
+   if gamestate==3 then
+      theworld:c()
+   end
 end
 
 function keyHandler.space()

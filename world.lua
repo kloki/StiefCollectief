@@ -1,4 +1,5 @@
 require 'stief'
+require 'projectile'
 require 'box'
 require 'utils'
 world={
@@ -43,6 +44,18 @@ function world:update(dt)
       
       --ask for player input from stief object
       self.player:update(dt)
+    
+      --remove destroyed objects
+      -- for i=1,#self.objects do
+      -- 	 if self.objects[i].destroy then table.remove(self.objects,i) end 
+      -- end
+      
+      --update certain objects
+      for i,object in ipairs(self.objects) do
+	 if object.type=="projectile" then object:update(dt) end 
+      end
+
+      
 
    elseif self.gameworldstate==2 then
       self.tw:update(dt)
@@ -144,6 +157,7 @@ function world:load(meter,level)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
+   self.objects[#self.objects].destroy=false
    --right
    self.objects[#self.objects+1]={}
    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth+1,self.mapHeigth/2)
@@ -151,6 +165,7 @@ function world:load(meter,level)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
+   self.objects[#self.objects].destroy=false
    --top
    self.objects[#self.objects+1]={}
    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth/2,-1)
@@ -158,6 +173,7 @@ function world:load(meter,level)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
+   self.objects[#self.objects].destroy=false
    --bottom
    self.objects[#self.objects+1]={}
    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth/2,self.mapHeigth+1)
@@ -165,7 +181,7 @@ function world:load(meter,level)
    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
    self.objects[#self.objects].fixture:setUserData(#self.objects)
    self.objects[#self.objects].type="solid"
-
+   self.objects[#self.objects].destroy=false
 
    --add objects from objects.txt
    local objectfile = love.filesystem.newFile("levels/".. level .. "/objects.txt")
@@ -178,6 +194,7 @@ function world:load(meter,level)
 	 self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
 	 self.objects[#self.objects].fixture:setUserData(#self.objects)
 	 self.objects[#self.objects].type="solid"
+	 self.objects[#self.objects].destroy=false
       elseif v[1]=="P" then--objects is polygon
 	 if #v <14 then --polygons can only have 8 vertices
 	    --find center
@@ -216,6 +233,7 @@ function world:load(meter,level)
 	    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
 	    self.objects[#self.objects].fixture:setUserData(#self.objects)
 	    self.objects[#self.objects].type="solid"
+	    self.objects[#self.objects].destroy=false
 	 end
       elseif v[1]=="C" then--object is circle
 	 self.objects[#self.objects+1]={}
@@ -224,6 +242,7 @@ function world:load(meter,level)
 	 self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
 	 self.objects[#self.objects].fixture:setUserData(#self.objects)
  	 self.objects[#self.objects].type="solid"
+	 self.objects[#self.objects].destroy=false
       elseif v[1]=="DB" then --dynamic object using the box object
 	 self.objects[#self.objects+1]=box:new()
 	 self.objects[#self.objects]:load(#self.objects, self.gameworld,v[2],v[3],v[4])
@@ -241,14 +260,17 @@ function world:beginContact(a,b,coll)
    local object1=a:getUserData()
    local object2=b:getUserData()
    
-   if object2=="player" or object2=="playerfoot" then
+   if object2=="player" or object2=="playerfoot" or self.objects[object2].type=="projectile"  then
       object1, object2= object2,object1
    end
    
    if object1=="playerfoot" then
      self.player:collisionSolid(self.objects[object2].type) 
-     
-  end
+   elseif object1~="player" then
+      if self.objects[object1].type=="projectile" then
+	 self.objects[object1].destroy=true
+      end
+   end
   
    if self.debug then
       if object1=="player"or object1=="playerfoot"then
@@ -308,9 +330,12 @@ end
 
 function world:x()
    self.player:spawnbox()
-   
-
 end
+
+function world:c()
+   self.player:shoot()
+end
+
 --utility functions
 
 function world:setState(s)
@@ -320,5 +345,11 @@ end
 function world:addBox(x,y,image)
    self.objects[#self.objects+1]=box:new()
    self.objects[#self.objects]:load(#self.objects, self.gameworld,x,y,"box.jpg")
+
+end
+
+function world:addProjectile(x,y,H,V)
+   self.objects[#self.objects+1]=projectile:new()
+   self.objects[#self.objects]:load(#self.objects, self.gameworld,x,y,H,V)
 
 end

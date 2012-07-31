@@ -4,4 +4,4 @@ MAPTILES 2
 # This sets the dimensions of the game world.
 MAPXY 2048 1024
 # This sets the triggers for the text writer
-TPtrigger 800
+TPtrigger 2000
