@@ -5,7 +5,7 @@ Dit is weer een nieuwe versie
 <SECTION>
 Ik heb het besturen van het karakter geimplementuurd en daarnaast heb ik een vrij geavenceerde physics engine gebruikt
 <SECTION>
-De controls zijn: pijltjes toetsen om te lopen, Space om the springen  en met d zet je de debug mode aan.
+De controls zijn: pijltjes toetsen om te lopen, Space om the springen, x spawnd eem doos(bouwen!!) en met d zet je de debug mode aan.
 <SECTION>
 Debug modes geeft allerlij extra informatie voor wat er achter de schermen gebeurt. 
 <SECTION>

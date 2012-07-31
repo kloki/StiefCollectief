@@ -306,10 +306,19 @@ function world:space()
    end
 end
 
+function world:x()
+   self.player:spawnbox()
+   
 
-
+end
 --utility functions
 
 function world:setState(s)
    self.gameworldstate=s
+end
+
+function world:addBox(x,y,image)
+   self.objects[#self.objects+1]=box:new()
+   self.objects[#self.objects]:load(#self.objects, self.gameworld,x,y,"box.jpg")
+
 end

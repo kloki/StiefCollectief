@@ -61,7 +61,9 @@ function love.keypressed(key)
    elseif key=="down" then
       keyHandler.down()
    elseif key=="d" then
-      keyHandler.d()
+      keyHandler.d()      
+   elseif key=="x" then
+      keyHandler.x()
    -- elseif key=="left" then
    --    keyHandler.left()
    -- elseif key=="right" then

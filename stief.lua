@@ -3,6 +3,9 @@ require 'TEsound'
 stief={ 
    sprites={},
    state=2,
+   walking=0,
+   directionH=1,
+   directionV=0,
    x=1000,
    y=300,
    debug=false
@@ -35,14 +38,34 @@ end
 function stief:update(dt)
    local commands={0,0}
    if love.keyboard.isDown("right","left") then
-      if love.keyboard.isDown("right") then commands[1]=commands[1]+400 end --walk left
-      if love.keyboard.isDown("left") then commands[1]=commands[1]-400 end --walk right
+      if love.keyboard.isDown("right") then --walk left 
+	 commands[1]=commands[1]+400
+	 self.directionH=1
+      end 
+      if love.keyboard.isDown("left") then  --walk right 
+	 commands[1]=commands[1]-400
+	 self.directionH=-1
+      end
+      self.walking=1
    else
       commands[1]= - self.body:getLinearVelocity()*2--automatically slow down is player is not walking needs work
+      self.walking=0
    end
    self.body:applyForce(commands[1], commands[2])
+   
+
+   if love.keyboard.isDown("up") then
+      self.directionV=-1
+   elseif love.keyboard.isDown("down") then
+      self.directionV=1
+   else
+      self.directionV=0
+   end
+
+
+
    if self.state==1 then --the player is standing on the ground
-      if love.keyboard.isDown(" ") then 
+      if love.keyboard.isDown(" ") then --jump
 	 self.body:applyLinearImpulse(0,-300)
 	 self.state=2   
 	 TEsound.play('sounds/bounce.mp3',"stief")
@@ -90,3 +113,12 @@ function stief:leaveSolid()
 
 end
 
+--buttons
+
+function stief:spawnbox()
+   if self.directionV==0 then
+      theworld:addBox(self.body:getX()+self.directionH*40,self.body:getY(),"box.jpg")     
+   else
+      theworld:addBox(self.body:getX()+self.walking*self.directionH*40,self.body:getY()+self.directionV*60,"box.jpg")
+   end
+end

@@ -5,6 +5,9 @@ function keyHandler.d()
    db:switch()
 end
 
+function keyHandler.x()
+   theworld:x()
+end
 
 function keyHandler.space()
    if gamestate==1 then

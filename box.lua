@@ -21,6 +21,7 @@ function box:load(index,gameworld,x,y,imagepath)
    self.fixture:setUserData(index)
    self.fixture:setRestitution(0.1)
    self.type=imagepath:sub(1,-5)
+
 end
 
 
