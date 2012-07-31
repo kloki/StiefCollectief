@@ -29,7 +29,7 @@ end
 
 function water:draw(drawx,drawy)
    love.graphics.setColor(0,0,255,60)
-   love.graphics.circle("fill",self.body:getX()+drawx,self.body:getY()+drawy,4)
+   love.graphics.circle("fill",self.body:getX()+drawx,self.body:getY()+drawy,7)
    love.graphics.setColor(255,255,255)
 end
 

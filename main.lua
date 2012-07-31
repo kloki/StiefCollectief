@@ -14,7 +14,7 @@ function love.load()
    theworld={}
 
    db=debugger:new()
-   db:on()
+   --db:on()
 
 
 
