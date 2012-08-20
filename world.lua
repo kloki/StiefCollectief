@@ -1,6 +1,7 @@
 require 'stief'
 require 'projectile'
 require 'box'
+require 'solid'
 require 'water'
 require 'ball'
 require 'utils'
@@ -81,7 +82,7 @@ function world:draw()
    
    --draw objects
    for i,object in ipairs(self.objects) do
-      if object.type~="solid" then object:draw(self.drawx,self.drawy) end--solids are already in the backgroundv 
+      object:draw(self.drawx,self.drawy) 
    end
 
    --draw player
@@ -163,105 +164,34 @@ function world:load(meter,level)
    self.tw:load("levels/".. level .. "/typeWriter.txt")
    --automatically add boundries around level
    --left
-   self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,-1,self.mapHeigth/2)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.mapHeigth)
-   self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-   self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="solid"
-   self.objects[#self.objects].destroy=false
-   self.objects[#self.objects].destructable=false
+   self.objects[#self.objects+1]=solid:new()
+   self.objects[#self.objects]:load(#self.objects, self.gameworld,-1,self.mapHeigth/2,"rectangle",{2,self.mapHeigth})
    --right
-   self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth+1,self.mapHeigth/2)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(2,self.mapHeigth)
-   self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-   self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="solid"
-   self.objects[#self.objects].destroy=false
-   self.objects[#self.objects].destructable=false
-   --top
-   self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth/2,-1)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(self.mapWidth,2)
-   self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-   self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="solid"
-   self.objects[#self.objects].destroy=false
-   self.objects[#self.objects].destructable=false
-   --bottom
-   self.objects[#self.objects+1]={}
-   self.objects[#self.objects].body = love.physics.newBody(self.gameworld,self.mapWidth/2,self.mapHeigth+1)
-   self.objects[#self.objects].shape = love.physics.newRectangleShape(self.mapWidth,2)
-   self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-   self.objects[#self.objects].fixture:setUserData(#self.objects)
-   self.objects[#self.objects].type="solid"
-   self.objects[#self.objects].destroy=false
-   self.objects[#self.objects].destructable=false
+   self.objects[#self.objects+1]=solid:new()
+   self.objects[#self.objects]:load(#self.objects, self.gameworld,self.mapWidth+1,self.mapHeigth/2,"rectangle",{2,self.mapHeigth})
+   --up
+   self.objects[#self.objects+1]=solid:new()
+   self.objects[#self.objects]:load(#self.objects, self.gameworld,self.mapWidth/2,-1,"rectangle",{self.mapWidth,2})
+   --down
+   self.objects[#self.objects+1]=solid:new()
+   self.objects[#self.objects]:load(#self.objects, self.gameworld,self.mapWidth/2,self.mapHeigth+1,"rectangle",{self.mapWidth,2})
+      
 
    --add objects from objects.txt
    local objectfile = love.filesystem.newFile("levels/".. level .. "/objects.txt")
    for object in objectfile:lines() do
       local v=object:split(" ")
       if v[1]=="R" then --object is rectangle
-	 self.objects[#self.objects+1]={}
-	 self.objects[#self.objects].body = love.physics.newBody(self.gameworld,v[2]+(v[4]-v[2])/2,v[3]+(v[5]-v[3])/2)
-	 self.objects[#self.objects].shape = love.physics.newRectangleShape(v[4]-v[2],v[5]-v[3])
-	 self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-	 self.objects[#self.objects].fixture:setUserData(#self.objects)
-	 self.objects[#self.objects].type="solid"
-	 self.objects[#self.objects].destroy=fals
-   self.objects[#self.objects].destructable=falsee
+	 self.objects[#self.objects+1]=solid:new()
+	 self.objects[#self.objects]:load(#self.objects, self.gameworld,v[2]+(v[4]-v[2])/2,v[3]+(v[5]-v[3])/2,"rectangle",{v[4]-v[2],v[5]-v[3]})
       elseif v[1]=="P" then--objects is polygon
-	 if #v <14 then --polygons can only have 8 vertices
-	    --find center
-	    local xmin=v[2]
-	    local xmax=v[2]
-	    local ymin=v[3]
-	    local ymax=v[3]
-	    for index=4, #v, 2 do
-	       if v[index]<xmin then xmin=v[index]
-	       elseif v[index]>xmax then xmax=v[index]
-	       end
-	       if v[index+1]<ymin then ymin=v[index+1]
-	       elseif v[index+1]>ymax then ymax=v[index+1]
-	       end
-	    end
-	    local centerx =xmin+(xmax-xmin)/2
-	    local centery =ymin+(ymax-ymin)/2
-	    table.remove(v,1)
-	    for index=1,#v,2 do
-	       v[index]=v[index]-centerx
-	       v[index+1]=v[index+1]-centery
-	    end
-	    
-	    self.objects[#self.objects+1]={}
-	    self.objects[#self.objects].body = love.physics.newBody(self.gameworld,centerx,centery)
-	    --this is stupid need to change this but just giving the table as parameter doesn't work
-	    if #v==6 then
-	       self.objects[#self.objects].shape = love.physics.newPolygonShape(v[1],v[2],v[3],v[4],v[5],v[6])
-	    elseif #v==8 then
-	       self.objects[#self.objects].shape = love.physics.newPolygonShape(v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8])
-	    elseif #v==10 then
-	       self.objects[#self.objects].shape = love.physics.newPolygonShape(v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10])
-	    elseif #v==12 then
-	       self.objects[#self.objects].shape = love.physics.newPolygonShape(v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10],v[11],v[12])
-	    end
-	    self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-	    self.objects[#self.objects].fixture:setUserData(#self.objects)
-	    self.objects[#self.objects].type="solid"
-	    self.objects[#self.objects].destroy=false
-	    self.objects[#self.objects].destructable=false
+	 if #v>14 then print("polygon cannot have more then 8 vertices") else
+	    self.objects[#self.objects+1]=solid:new()
+	    self.objects[#self.objects]:load(#self.objects, self.gameworld,v[2],v[3],"polygon",v)
 	 end
       elseif v[1]=="C" then--object is circle
-	 self.objects[#self.objects+1]={}
-	 self.objects[#self.objects].body = love.physics.newBody(self.gameworld,v[2],v[3])
-	 self.objects[#self.objects].shape = love.physics.newCircleShape(v[4])
-	 self.objects[#self.objects].fixture = love.physics.newFixture(self.objects[#self.objects].body,self.objects[#self.objects].shape)
-	 self.objects[#self.objects].fixture:setUserData(#self.objects)
- 	 self.objects[#self.objects].type="solid"
-	 self.objects[#self.objects].destroy=false
-	 self.objects[#self.objects].destructable=false
+	 self.objects[#self.objects+1]=solid:new()
+	 self.objects[#self.objects]:load(#self.objects, self.gameworld,v[2],v[3],"circle",{v[4]})
       elseif v[1]=="DB" then --dynamic object using the box object
 	 self.objects[#self.objects+1]=box:new()
 	 self.objects[#self.objects]:load(#self.objects, self.gameworld,v[2],v[3],v[4])
