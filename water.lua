@@ -5,7 +5,8 @@ water={
    type,
    destroy=false,
    destructable=true,
-   hp=1
+   hp=1,
+   jumpable=false
 }
 
 

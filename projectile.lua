@@ -5,6 +5,7 @@ projectile={
    power=1,
    destroy=false,
    destructable=false,
+   jumpable=true,
    type="projectile",
   
 }

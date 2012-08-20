@@ -6,7 +6,8 @@ box={
    type,
    destroy=false,
    destructable=true,
-   hp=4
+   hp=4,
+   jumpable=true
 }
 
 

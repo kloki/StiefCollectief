@@ -217,8 +217,8 @@ function world:beginContact(a,b,coll)
    end
    
    
-   if object1=="playerfoot" then
-     self.player:collisionSolid(self.objects[object2].type) 
+   if object1=="playerfoot"  then
+      if self.objects[object2].jumpable then self.player:collisionSolid(self.objects[object2].type) end 
    elseif object1~="player" then
       if self.objects[object1].type=="projectile" then
 	 self.objects[object1].destroy=true
@@ -248,7 +248,7 @@ function world:endContact(a,b,coll)
       object1, object2= object2,object1
    end
    
-   if object1=="playerfoot" then
+   if object1=="playerfoot" and self.objects[object2].jumpable then
      self.player:leaveSolid()
   end
   

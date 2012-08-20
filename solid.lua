@@ -3,7 +3,7 @@ solid={
    length,
    width,
    image,
-   type,
+   type="solid",
    destroy=false,
    destructable=false,
    jumpable=true
