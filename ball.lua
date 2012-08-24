@@ -35,6 +35,13 @@ function ball:draw(drawx,drawy)
    love.graphics.setColor(255,255,255)
 end
 
+
+function ball:debug(drawx,drawy)
+   love.graphics.circle("line", drawx + self.body:getX(), drawy + self.body:getY(), self.shape:getRadius())
+   love.graphics.print(self.hp,self.body:getX()+drawx,self.body:getY()+drawy)
+end
+
+
 function ball:takeDamage(power)
    self.hp=self.hp - power
    if self.hp <= 0 then

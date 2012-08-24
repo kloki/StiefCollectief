@@ -81,3 +81,17 @@ end
 
 function solid:draw(drawx,drawy)
 end
+
+
+function solid:debug(drawx,drawy)
+   if self.form == "circle" then
+      love.graphics.circle("line", drawx + self.body:getX(), drawy + self.body:getY(), self.shape:getRadius())
+   else
+      local points={self.body:getWorldPoints(self.shape:getPoints())}
+      for index=1, #points,2 do
+	 points[index]=points[index]+drawx	    
+	 points[index+1]=points[index+1]+drawy
+      end
+      love.graphics.polygon("line", points)
+   end
+end

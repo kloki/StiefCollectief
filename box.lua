@@ -35,6 +35,19 @@ function box:draw(drawx,drawy)
    love.graphics.draw(self.image,self.body:getX()+drawx,self.body:getY()+drawy,self.body:getAngle(),1,1,self.image:getWidth()/2,self.image:getHeight()/2)
 end
 
+
+function box:debug(drawx,drawy)
+
+   local points={self.body:getWorldPoints(self.shape:getPoints())}
+   for index=1, #points,2 do
+      points[index]=points[index]+drawx	    
+      points[index+1]=points[index+1]+drawy
+   end
+   love.graphics.polygon("line", points)
+   love.graphics.print(self.hp,self.body:getX()+drawx,self.body:getY()+drawy)
+
+end
+
 function box:takeDamage(power)
    self.hp=self.hp - power
    if self.hp <= 0 then

@@ -98,20 +98,9 @@ function world:draw()
    if self.debug then
       --draw collision objects
       for index, object in ipairs(self.objects) do
-	 if object.shape:getType()=="circle" then
-	    love.graphics.circle("line", self.drawx + object.body:getX(), self.drawy + object.body:getY(), object.shape:getRadius())
-	 else
-	    local points={object.body:getWorldPoints(object.shape:getPoints())}
-	    for index=1, #points,2 do
-	       points[index]=points[index]+self.drawx	    
-	       points[index+1]=points[index+1]+self.drawy
-	    end
-	    love.graphics.polygon("line", points)
-	    if object.type=="box" or object.type=="ball" then
-	       love.graphics.print(object.hp,object.body:getX()+self.drawx,object.body:getY()+self.drawy)
-	    end
-	 end
+	 object:debug(self.drawx,self.drawy)
       end
+
       --draw TPtriggers
       love.graphics.setColor(255,0,0)
       love.graphics.rectangle("fill",self.TPtriggers[1]+self.drawx,self.drawy,2,self.mapHeigth)

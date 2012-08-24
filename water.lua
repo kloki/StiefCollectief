@@ -34,6 +34,11 @@ function water:draw(drawx,drawy)
    love.graphics.setColor(255,255,255)
 end
 
+function water:debug(drawx,drawy)
+
+end
+
+
 function water:takeDamage(power)
    self.hp=self.hp - power
    if self.hp <= 0 then
