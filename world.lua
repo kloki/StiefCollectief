@@ -271,23 +271,29 @@ end
 --button functions
 
 function world:space()
+   
    if self.gameworldstate==2 then
       self.tw:push()
+   elseif self.gameworldstate==1 then
+      self.player:jump()
    end
 end
 
 function world:x()
-   self.player:spawnbox()
+   if self.gameworldstate==1 then
+      self.player:spawnbox()
+   end
 end
-
 function world:c()
-   self.player:shoot()
+   if self.gameworldstate==1 then
+      self.player:shoot()
+   end
 end
-
 function world:v()
-   self.player:spawnBall()
+   if self.gameworldstate==1 then
+      self.player:spawnBall()
+   end
 end
-
 
 
 
